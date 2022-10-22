@@ -24,16 +24,18 @@ public class Dispatcher : MonoBehaviour
 
     int texWidth = 1920;
     int texHeight = 1080;
-    int agentNum = 500000;
+    int agentNum = 1000000;
 
     int agentSpeed = 20;
-    float trailStrength = 5;
-    float trailDecay = .2f;
-    float trailDiffusion = 3f;
-    float sensorAngleOffset = 30; // degrees
+    float trailStrength = 1.5f;
+    float trailDecay = 0.01f;
+    float trailDiffusion = 1f;
+    float sensorAngleOffset = 45; // degrees
     float sensorDistance = 35;
     int sensorRadius = 1;
-    float turnSpeed = 2;
+    float turnSpeed = 1.5f;
+
+    int simSpeed = 10;
 
     void Start()
     {
@@ -52,7 +54,7 @@ public class Dispatcher : MonoBehaviour
             // Center
             //agents[i].position = center;
             // disk
-            agents[i].position = center + Random.insideUnitCircle * 0.5f * texHeight;
+            agents[i].position = center + Random.insideUnitCircle * 0.50f * texHeight;
             // Circle
             //agents[i].position = center + Random.insideUnitCircle.normalized * 0.5f * texHeight;
 
@@ -86,19 +88,22 @@ public class Dispatcher : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        moldCompute.SetFloat("time", Time.time);
-        moldCompute.SetFloat("deltaTime", Time.fixedDeltaTime);
-        // simulate
-        moldCompute.SetTexture(kernelIndex: 0, "trailMap", trailMap);
-        ComputeHelper.Dispatch(moldCompute, agentNum, 1, 1, kernelIndex: 0);
+        for (int i = 0; i < simSpeed; i++)
+        {
+            moldCompute.SetFloat("time", Time.time);
+            moldCompute.SetFloat("deltaTime", Time.fixedDeltaTime);
+            // simulate
+            moldCompute.SetTexture(kernelIndex: 0, "trailMap", trailMap);
+            ComputeHelper.Dispatch(moldCompute, agentNum, 1, 1, kernelIndex: 0);
 
-        // Diffuse trail
-        moldCompute.SetTexture(kernelIndex: 1, "trailMap", trailMap);
-        moldCompute.SetTexture(kernelIndex: 1, "diffusedTrailMap", diffusedTrailMap);
-        ComputeHelper.Dispatch(moldCompute, texWidth, texHeight, 1, kernelIndex: 1);
+            // Diffuse trail
+            moldCompute.SetTexture(kernelIndex: 1, "trailMap", trailMap);
+            moldCompute.SetTexture(kernelIndex: 1, "diffusedTrailMap", diffusedTrailMap);
+            ComputeHelper.Dispatch(moldCompute, texWidth, texHeight, 1, kernelIndex: 1);
 
-        // Apply blured trail
-        ComputeHelper.CopyRenderTexture(diffusedTrailMap, trailMap);
+            // Apply blured trail
+            ComputeHelper.CopyRenderTexture(diffusedTrailMap, trailMap);
+        }
     }
 
     private void OnGUI()
