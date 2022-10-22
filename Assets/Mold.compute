@@ -9,6 +9,7 @@ RWTexture2D<float4> trailMap;
 
 RWStructuredBuffer<Agent> agents;
 uint agentsLength;
+float trailStrength;
 
 float time;
 float deltaTime;
@@ -117,8 +118,8 @@ void Update(uint3 id : SV_DispatchThreadID)
 	else 
 	{
 		float4 oldTrail = trailMap[int2(position)];
-		trailMap[int2(position)] = min(1, oldTrail + 10 * speed * deltaTime);
-		trailMap[int2(position)] = float4(1, 1, 1, 1);
+		trailMap[int2(position)] = min(1, oldTrail + trailStrength * deltaTime);
+		
 	}
 
 	agents[id.x].position = position;
