@@ -133,7 +133,6 @@ GameObject:
   - component: {fileID: 85083101}
   - component: {fileID: 85083100}
   - component: {fileID: 85083099}
-  - component: {fileID: 85083104}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -163,7 +162,7 @@ MeshCollider:
   m_GameObject: {fileID: 85083098}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
@@ -175,7 +174,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 85083098}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -223,24 +222,11 @@ Transform:
   m_GameObject: {fileID: 85083098}
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 1, z: 1}
+  m_LocalScale: {x: 1.6775991, y: 0.83879954, z: 0.83879954}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
---- !u!114 &85083104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 85083098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a045d8ac75c22dd489a645b3bdcf1f2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moldCompute: {fileID: 7200000, guid: 570df812f0f550e4bade4dc078656fbc, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

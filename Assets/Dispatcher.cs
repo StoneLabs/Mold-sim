@@ -8,7 +8,6 @@ using UnityEngine.Experimental.PlayerLoop;
 
 public class Dispatcher : MonoBehaviour
 {
-
     public struct Agent
     {
         public Vector2 position;
@@ -18,22 +17,25 @@ public class Dispatcher : MonoBehaviour
     ComputeBuffer agentBuffer;
 
     public ComputeShader moldCompute;
-    //public ComputeShader moldRender;
 
-    //RenderTexture displayTexture;
     RenderTexture diffusedTrailMap;
     RenderTexture trailMap;
+
 
     int texWidth = 1920;
     int texHeight = 1080;
     int agentNum = 10000;
-    int agentSpeed = 500;
-    float trailDecay = 0.4f;
-    float traildiffusion = 1;
+
+    int agentSpeed = 20;
+    float trailDecay = .3f;
+    float trailDiffusion = 0.0f;
+    float sensorAngleOffset = 35; // degrees
+    float sensorDistance = 6;
+    int sensorRadius = 1;
+    float turnSpeed = 2;
 
     void Start()
     {
-        //ComputeHelper.CreateRenderTexture(ref displayTexture, texWidth, texHeight);
         ComputeHelper.CreateRenderTexture(ref trailMap, texWidth, texHeight);
         ComputeHelper.CreateRenderTexture(ref diffusedTrailMap, texWidth, texHeight);
 
@@ -42,7 +44,7 @@ public class Dispatcher : MonoBehaviour
 
         for (int i = 0; i < agents.Length; i++)
         {
-            agents[i].position = new Vector2(texWidth / 2, texHeight / 2);
+            agents[i].position = new Vector2(Random.value * texWidth, Random.value * texHeight);
             agents[i].angle = Random.value * Mathf.PI * 2;
         }
 
@@ -52,10 +54,11 @@ public class Dispatcher : MonoBehaviour
         moldCompute.SetInt("height", texHeight);
         moldCompute.SetInt("speed", agentSpeed);
         moldCompute.SetFloat("decayRate", trailDecay);
-        moldCompute.SetFloat("diffuseRate", traildiffusion);
-
-        //moldRender.SetBuffer(0, "agents", agentBuffer);
-        //moldRender.SetInt("agentsLength", agentsNum);
+        moldCompute.SetFloat("diffuseRate", trailDiffusion);
+        moldCompute.SetFloat("sensorAngleOffset", sensorAngleOffset);
+        moldCompute.SetFloat("sensorDistance", sensorDistance);
+        moldCompute.SetInt("sensorRadius", sensorRadius);
+        moldCompute.SetFloat("turnSpeed", turnSpeed);
 
         transform.GetComponentInChildren<MeshRenderer>().material.mainTexture = trailMap;
     }
@@ -63,8 +66,8 @@ public class Dispatcher : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        moldCompute.SetFloat("time", Time.time);
         moldCompute.SetFloat("deltaTime", Time.fixedDeltaTime);
-
         // simulate
         moldCompute.SetTexture(kernelIndex: 0, "trailMap", trailMap);
         ComputeHelper.Dispatch(moldCompute, agentNum, 1, 1, kernelIndex: 0);
@@ -78,11 +81,8 @@ public class Dispatcher : MonoBehaviour
         ComputeHelper.CopyRenderTexture(diffusedTrailMap, trailMap);
     }
 
-    void LateUpdate()
+    private void OnGUI()
     {
-        //ComputeHelper.CopyRenderTexture(trailMap, displayTexture);
-
-        //moldRender.SetTexture(0, "targetTexture", displayTexture);
-        //ComputeHelper.Dispatch(moldRender,agentsNum, 1, 1, 0);
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), trailMap);
     }
 }
