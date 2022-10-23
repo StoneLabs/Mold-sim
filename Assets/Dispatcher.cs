@@ -27,15 +27,15 @@ public class Dispatcher : MonoBehaviour
     int agentNum = 1000000;
 
     int agentSpeed = 20;
-    float trailStrength = 1.5f;
-    float trailDecay = 0.01f;
-    float trailDiffusion = 1f;
-    float sensorAngleOffset = 45; // degrees
+    float trailStrength = 5;
+    float trailDecay = .2f;
+    float trailDiffusion = 3f;
+    float sensorAngleOffset = 30; // degrees
     float sensorDistance = 35;
     int sensorRadius = 1;
-    float turnSpeed = 1.5f;
+    float turnSpeed = 2;
 
-    int simSpeed = 10;
+    int simSpeed = 1;
 
     void Start()
     {
